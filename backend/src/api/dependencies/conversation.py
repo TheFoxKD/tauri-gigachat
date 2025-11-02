@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, Request
 
 from contexts.conversation.application.agent_registry import AgentRegistry
 from contexts.conversation.application.conversation_service import ConversationService
@@ -9,8 +9,10 @@ from src.core.settings import AppSettings
 from src.contexts.conversation.infrastructure.memory import ConversationMemoryStore
 
 
-def get_conversation_memory_store() -> ConversationMemoryStore:
-    return ConversationMemoryStore()
+def get_conversation_memory_store(
+    request: Request,
+) -> ConversationMemoryStore:
+    return request.app.state.conversation_memory_store
 
 
 def get_agent_registry(
