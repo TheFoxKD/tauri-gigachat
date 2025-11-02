@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from api.router import api_router
 
 app = FastAPI(title="GigaChat Backend", version="1.0.0")
