@@ -1,14 +1,27 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, status
+
+from src.api.schemas import DetailResponse
 
 from .schemas import RequestPayload, RequestResponse
+from api.auth.basic import require_basic
 
 
-router = APIRouter(prefix="/v1", tags=["request"])
+router = APIRouter(
+    prefix="/request",
+    tags=["Request"],
+    dependencies=[Depends(require_basic)],
+)
 
 
 @router.post(
-    "/request",
+    "",
     response_model=RequestResponse,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {
+            "model": DetailResponse,
+            "description": "Unauthorized",
+        },
+    },
     summary="LLM request (stub)",
     description="Возвращает заглушку ответа. Позже будет проксирование в GigaChat.",
 )
