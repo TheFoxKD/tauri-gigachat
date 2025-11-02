@@ -1,0 +1,12 @@
+[project]
+name = "gigachat-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard,standart]>=0.120.4",
+    "gigachat>=0.1.42.post2",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.11.0",
+]
