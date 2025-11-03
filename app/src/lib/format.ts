@@ -1,7 +1,23 @@
 import { marked } from "marked";
+import markedKatex from "marked-katex-extension";
 import DOMPurify from "dompurify";
+import { markedHighlight } from "marked-highlight";
+import hljs from "highlight.js";
 
 marked.setOptions({ breaks: true, gfm: true });
+marked.use(markedKatex({ throwOnError: false, nonStandard: true }));
+marked.use(
+  markedHighlight({
+    emptyLangClass: "hljs",
+    langPrefix: "hljs language-",
+    highlight(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return hljs.highlightAuto(code).value;
+    },
+  }),
+);
 
 export function pluralizeMessages(count: number): string {
   const mod10 = count % 10;

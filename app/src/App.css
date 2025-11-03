@@ -447,19 +447,37 @@ body {
 }
 
 .chat-message__bubble pre {
-  margin: 10px 0 0;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(15, 61, 52, 0.08);
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid rgba(15, 23, 42, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   overflow-x: auto;
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 13px;
+  line-height: 1.6;
+}
+
+.chat-message__bubble pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.chat-message__bubble pre .hljs {
+  background: transparent;
+  color: inherit;
 }
 
 .chat-message__bubble code {
-  background: rgba(15, 61, 52, 0.08);
-  padding: 2px 4px;
+  background: rgba(15, 61, 52, 0.16);
+  color: #064e3b;
+  padding: 2px 6px;
   border-radius: 6px;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 13px;
 }
 
 .chat-message__bubble :first-child {
@@ -475,9 +493,19 @@ body {
   color: #fff;
 }
 
-.chat-message--user .chat-message__bubble pre,
+.chat-message--user .chat-message__bubble pre {
+  background: rgba(15, 23, 42, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #f0fdf4;
+}
+
+.chat-message--user .chat-message__bubble pre .hljs,
 .chat-message--user .chat-message__bubble code {
-  background: rgba(255, 255, 255, 0.18);
+  color: inherit;
+}
+
+.chat-message--user .chat-message__bubble code {
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .chat-message__bubble p {
