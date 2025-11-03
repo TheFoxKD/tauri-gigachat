@@ -1,0 +1,11 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "network",
+  "description": "Allow the app to perform HTTP requests",
+  "permissions": [
+    {
+      "identifier": "http:default",
+      "allow": ["*"]
+    }
+  ]
+}
