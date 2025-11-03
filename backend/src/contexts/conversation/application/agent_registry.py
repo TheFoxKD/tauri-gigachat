@@ -5,8 +5,7 @@ from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_gigachat.chat_models import GigaChat
 from pydantic import BaseModel, ConfigDict
 
-from src.contexts.conversation.infrastructure.langchain_llm import create_gigachat_llm
-from src.contexts.conversation.infrastructure.memory import ConversationMemoryStore
+from src.contexts.conversation.base.memory import ConversationMemoryStore
 
 
 class AgentHandle(BaseModel):
@@ -26,17 +25,16 @@ class RegistryResult(BaseModel):
 
 @dataclass
 class AgentRegistry:
-    credentials: str
+    llm: GigaChat
     memory_store: ConversationMemoryStore
     agents: dict[str, AgentHandle] = field(default_factory=dict)
 
     def get_or_create(self, raw_conversation_id: str | None) -> RegistryResult:
         conversation_id = self._resolve_id(raw_conversation_id)
         if conversation_id not in self.agents:
-            # Создаём новый LLM и привязываем свежую историю только при первом доступе.
+            # Привязываем общий LLM и отдельную память к каждому идентификатору диалога.
             memory = self.memory_store.get(conversation_id)
-            llm = create_gigachat_llm(credentials=self.credentials, streaming=True)
-            self.agents[conversation_id] = AgentHandle(llm=llm, history=memory)
+            self.agents[conversation_id] = AgentHandle(llm=self.llm, history=memory)
         return RegistryResult(
             conversation_id=conversation_id, agent=self.agents[conversation_id]
         )

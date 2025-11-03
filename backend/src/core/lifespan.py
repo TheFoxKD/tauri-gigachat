@@ -2,21 +2,32 @@ import contextlib
 from typing import AsyncIterator
 
 from fastapi import FastAPI
+from langchain_gigachat.chat_models import GigaChat
 
-from src.contexts.conversation.infrastructure.memory import ConversationMemoryStore
+from src.contexts.conversation.application.agent_registry import AgentRegistry
+from src.contexts.conversation.base.memory import ConversationMemoryStore
+from src.core.container import AppContainer
+from src.core.settings import AppSettings
 
 
 @contextlib.asynccontextmanager
 async def app_lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Provision shared resources for the whole app lifetime.
+    settings = AppSettings()
+    memory_store = ConversationMemoryStore()
+    llm = GigaChat(
+        credentials=settings.gigachat_credentials,
+        verify_ssl_certs=False,
+        streaming=True,
+    )
+    registry = AgentRegistry(llm=llm, memory_store=memory_store)
 
-    We create a single ConversationMemoryStore to persist chat history between
-    requests. The store lives in ``app.state`` so FastAPI dependencies can
-    access it without relying on module-level globals.
-    """
-
-    app.state.conversation_memory_store = ConversationMemoryStore()
+    app.state.container = AppContainer(
+        settings=settings,
+        memory_store=memory_store,
+        llm=llm,
+        agent_registry=registry,
+    )
     try:
-        yield
+        yield None
     finally:
-        del app.state.conversation_memory_store
+        del app.state.container

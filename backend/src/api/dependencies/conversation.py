@@ -1,30 +1,32 @@
+from functools import lru_cache
 from typing import Annotated
 
-from fastapi import Depends, Request
+from fastapi import Depends
+from langchain_gigachat.chat_models import GigaChat
 
 from contexts.conversation.application.agent_registry import AgentRegistry
 from contexts.conversation.application.conversation_service import ConversationService
-from src.api.dependencies.settings import get_settings
-from src.core.settings import AppSettings
-from src.contexts.conversation.infrastructure.memory import ConversationMemoryStore
+from src.api.dependencies.container import get_container
+from src.contexts.conversation.base.memory import ConversationMemoryStore
+from src.core.container import AppContainer
 
 
 def get_conversation_memory_store(
-    request: Request,
+    container: Annotated[AppContainer, Depends(get_container)],
 ) -> ConversationMemoryStore:
-    return request.app.state.conversation_memory_store
+    return container.memory_store
+
+
+def get_gigachat_llm(
+    container: Annotated[AppContainer, Depends(get_container)],
+) -> GigaChat:
+    return container.llm
 
 
 def get_agent_registry(
-    settings: Annotated[AppSettings, Depends(get_settings)],
-    memory_store: Annotated[
-        ConversationMemoryStore, Depends(get_conversation_memory_store)
-    ],
+    container: Annotated[AppContainer, Depends(get_container)],
 ) -> AgentRegistry:
-    return AgentRegistry(
-        credentials=settings.gigachat_credentials,
-        memory_store=memory_store,
-    )
+    return container.agent_registry
 
 
 def get_conversation_service(

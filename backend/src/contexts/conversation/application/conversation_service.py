@@ -42,16 +42,17 @@ class ConversationService:
         """Возвращает полный ответ без стрима."""
 
         registry_result = self.registry.get_or_create(conversation_id)
-        agent = registry_result.agent
-        messages = self._compose_messages(agent.history.messages, message)
+        messages = self._compose_messages(
+            registry_result.agent.history.messages, message
+        )
 
         # ainvoke возвращает AIMessage, поэтому преобразуем ответ в строку вручную.
-        ai_message = await agent.llm.ainvoke(messages)
+        ai_message = await registry_result.agent.llm.ainvoke(messages)
         response_text = self._message_to_text(ai_message)
 
         # Сохраняем обе реплики после успешного запроса, чтобы история оставалась согласованной.
-        agent.history.add_user_message(message)
-        agent.history.add_ai_message(response_text)
+        registry_result.agent.history.add_user_message(message)
+        registry_result.agent.history.add_ai_message(response_text)
 
         return RunTextResult(
             conversation_id=registry_result.conversation_id,
@@ -64,19 +65,20 @@ class ConversationService:
         """Готовит стрим токенов для SSE."""
 
         registry_result = self.registry.get_or_create(conversation_id)
-        agent = registry_result.agent
-        messages = self._compose_messages(agent.history.messages, message)
+        messages = self._compose_messages(
+            registry_result.agent.history.messages, message
+        )
 
         async def token_stream() -> AsyncIterator[str]:
             collected_chunks: list[str] = []
 
-            async for text in self._iter_stream_text(agent, messages):
+            async for text in self._iter_stream_text(registry_result.agent, messages):
                 collected_chunks.append(text)
                 yield text
 
             full_response = "".join(collected_chunks)
-            agent.history.add_user_message(message)
-            agent.history.add_ai_message(full_response)
+            registry_result.agent.history.add_user_message(message)
+            registry_result.agent.history.add_ai_message(full_response)
 
         return StreamResult(
             conversation_id=registry_result.conversation_id,

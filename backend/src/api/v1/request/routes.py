@@ -53,15 +53,10 @@ async def request(
                 yield ServerSentEvent(data="[DONE]")
 
         return EventSourceResponse(
-            event_stream(),
-            media_type="text/event-stream; charset=utf-8",
+            content=event_stream(),
             headers={
                 "X-Conversation-Id": stream_result.conversation_id,
-                "Cache-Control": "no-cache",
-                "X-Accel-Buffering": "no",
-                "Connection": "keep-alive",
             },
-            ping=15000,
         )
 
     run_result = await service.arun_text(

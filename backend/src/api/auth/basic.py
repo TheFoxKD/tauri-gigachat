@@ -14,7 +14,5 @@ async def require_basic(
 
     if not (username_ok and password_ok):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Basic"},
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
