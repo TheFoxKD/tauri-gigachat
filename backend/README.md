@@ -1,6 +1,6 @@
 # Backend (FastAPI + uv + Docker)
 
-API-прокси для GigaChat. POST `/v1/request` (Basic Auth `giga/top`) поддерживает:
+API-прокси для GigaChat. POST `/api/v1/request` (Basic Auth `giga/top`) поддерживает:
 
 - потоковый ответ (SSE) по умолчанию;
 - полный ответ одним JSON при `"stream": false`;
@@ -38,7 +38,7 @@ uv run fastapi dev src/main.py
 Проверочный запрос (Basic Auth `giga/top`):
 
 ```bash
-curl -u giga:top -X POST http://localhost:8000/v1/request \
+curl -u giga:top -X POST http://localhost:8000/api/v1/request \
   -H "Content-Type: application/json" \
   -d '{"message": "Привет", "stream": false}'
 ```
@@ -85,7 +85,7 @@ backend/
 1. **SSE по умолчанию**
 
    ```bash
-   curl -N -u giga:top -X POST http://localhost:8000/v1/request \
+   curl -N -u giga:top -X POST http://localhost:8000/api/v1/request \
      -H "Content-Type: application/json" \
      -d '{"message":"Привет","conversation_id":"c1"}'
    ```
@@ -95,7 +95,7 @@ backend/
 2. **Полный ответ**
 
    ```bash
-   curl -u giga:top -X POST http://localhost:8000/v1/request \
+   curl -u giga:top -X POST http://localhost:8000/api/v1/request \
      -H "Content-Type: application/json" \
      -d '{"message":"Кто такой Tauri?","stream":false,"conversation_id":"c2"}'
    ```
@@ -120,7 +120,7 @@ backend/
 ## Ссылки
 
 - C4 model: <https://c4model.com/>
-- LangChain: <https://python.langсchain.com/>
+- LangChain: <https://python.langchain.com/>
 - GigaChain — обзор: <https://developers.sber.ru/docs/ru/gigachain/overview>
 - GigaChat SDK (Python): <https://developers.sber.ru/docs/ru/gigachain/tools/python/gigachat>
 - FastAPI: <https://fastapi.tiangolo.com/#sponsors>

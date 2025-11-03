@@ -14,7 +14,3 @@ class ConversationMemoryStore:
         if conversation_id not in self.items:
             self.items[conversation_id] = InMemoryChatMessageHistory()
         return self.items[conversation_id]
-
-    def reset(self, conversation_id: str) -> None:
-        """Удаляет память для конкретного диалога."""
-        self.items.pop(conversation_id, None)

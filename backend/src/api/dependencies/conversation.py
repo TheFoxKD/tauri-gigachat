@@ -1,11 +1,12 @@
-from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends
 from langchain_gigachat.chat_models import GigaChat
 
-from contexts.conversation.application.agent_registry import AgentRegistry
-from contexts.conversation.application.conversation_service import ConversationService
+from src.contexts.conversation.application.agent_registry import AgentRegistry
+from src.contexts.conversation.application.conversation_service import (
+    ConversationService,
+)
 from src.api.dependencies.container import get_container
 from src.contexts.conversation.base.memory import ConversationMemoryStore
 from src.core.container import AppContainer

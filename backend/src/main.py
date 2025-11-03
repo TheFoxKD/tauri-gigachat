@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from api.router import api_router
+from src.api.router import api_router
 from src.core.lifespan import app_lifespan
 
 app = FastAPI(

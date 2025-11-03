@@ -1,4 +1,3 @@
-import json
 from collections.abc import AsyncIterator
 from typing import Annotated
 
@@ -8,10 +7,12 @@ from sse_starlette.sse import EventSourceResponse
 
 from src.api.schemas import DetailResponse
 
-from .schemas import RequestPayload, RequestResponse
-from api.auth.basic import require_basic
-from api.dependencies.conversation import get_conversation_service
-from contexts.conversation.application.conversation_service import ConversationService
+from src.api.v1.request.schemas import RequestPayload, RequestResponse
+from src.api.auth.basic import require_basic
+from src.api.dependencies.conversation import get_conversation_service
+from src.contexts.conversation.application.conversation_service import (
+    ConversationService,
+)
 
 
 router = APIRouter(
@@ -46,11 +47,11 @@ async def request(
                 async for token in stream_result.stream:
                     if await request.is_disconnected():
                         break
-                    yield ServerSentEvent(data=json.dumps({"content": token}))
+                    yield ServerSentEvent(event="content", data=token)
             except Exception as exc:
-                yield ServerSentEvent(data=json.dumps({"error": str(exc)}))
+                yield ServerSentEvent(event="error", data=str(exc))
             finally:
-                yield ServerSentEvent(data="[DONE]")
+                yield ServerSentEvent(event="done", data="[DONE]")
 
         return EventSourceResponse(
             content=event_stream(),

@@ -2,7 +2,11 @@ from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from typing import Iterable
 
-from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
+from langchain_core.messages import (
+    BaseMessage,
+    HumanMessage,
+    SystemMessage,
+)
 from pydantic import BaseModel, ConfigDict
 
 from src.contexts.conversation.application.agent_registry import (
@@ -100,7 +104,7 @@ class ConversationService:
 
         return self._content_to_text(message.content)
 
-    def _content_to_text(self, content: object) -> str:
+    def _content_to_text(self, content: str | list[str] | tuple[str]) -> str:
         """Превращает произвольное содержимое LangChain в строку."""
 
         if isinstance(content, str):
@@ -108,17 +112,11 @@ class ConversationService:
 
         if isinstance(content, (list, tuple)):
             parts: list[str] = []
-            for item in content:
-                if isinstance(item, str):
-                    parts.append(item)
+            for part in content:
+                if isinstance(part, str):
+                    parts.append(part)
                     continue
-                if isinstance(item, dict):
-                    text = item.get("text")
-                    if text:
-                        parts.append(str(text))
             return "".join(parts)
-
-        return str(content)
 
     async def _iter_stream_text(
         self, agent: AgentHandle, messages: Iterable[BaseMessage]
@@ -130,29 +128,9 @@ class ConversationService:
         2) astream_text → текстовые чанки
         3) astream → AIMessageChunk → извлекаем текст
         """
+        async for chunk in agent.llm.astream(
+            messages,
+        ):
+            yield self._content_to_text(chunk.content)
 
-        if hasattr(agent.llm, "astream_events"):
-            async for ev in agent.llm.astream_events(
-                messages,
-                version="v1",
-            ):
-                if ev.get("event") == "on_chat_model_stream":
-                    data = ev.get("data") or {}
-                    chunk = data.get("chunk")
-                    if chunk is None:
-                        continue
-                    text = self._content_to_text(getattr(chunk, "content", ""))
-                    if text:
-                        yield text
-            return
-
-        if hasattr(agent.llm, "astream_text"):
-            async for text in agent.llm.astream_text(messages):
-                if text:
-                    yield text
-            return
-
-        async for chunk in agent.llm.astream(messages):
-            text = self._message_to_text(chunk)
-            if text:
-                yield text
+        return
