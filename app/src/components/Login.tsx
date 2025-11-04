@@ -10,6 +10,7 @@ interface LoginProps {
 export const Login: Component<LoginProps> = (props) => {
   const [username, setUsername] = createSignal("");
   const [password, setPassword] = createSignal("");
+  const errorMessage = () => props.error?.trim();
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
@@ -51,8 +52,8 @@ export const Login: Component<LoginProps> = (props) => {
             />
           </label>
 
-          <Show when={props.error}>
-            <p class="login__error">{props.error}</p>
+          <Show when={errorMessage()}>
+            <p class="login__error">{errorMessage()}</p>
           </Show>
 
           <button class="login__submit" type="submit" disabled={props.isSubmitting}>

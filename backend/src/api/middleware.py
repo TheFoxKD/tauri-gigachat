@@ -1,9 +1,8 @@
-from typing import Any, Sequence
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.types import ASGIApp
 
 
-class GigaCorsMiddleware(CORSMiddleware):
+class AppCorsMiddleware(CORSMiddleware):
     OPTIONS = {
         "allow_origins": ["*"],
         "allow_credentials": True,

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.api.middleware import GigaCorsMiddleware
+from src.api.middleware import AppCorsMiddleware
 from src.api.router import api_router
 from src.core.lifespan import app_lifespan
 
@@ -10,6 +10,6 @@ app = FastAPI(
     lifespan=app_lifespan,
 )
 
-app.add_middleware(GigaCorsMiddleware)
+app.add_middleware(AppCorsMiddleware)
 
 app.include_router(api_router)
