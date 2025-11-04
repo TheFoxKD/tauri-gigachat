@@ -3,6 +3,7 @@
 
 
 Демо (приложение с 4:10):
+
 https://github.com/user-attachments/assets/57468d3b-34fd-4f1a-8d5b-6e1403d58f95
 
 
