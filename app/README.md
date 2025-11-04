@@ -1,6 +1,6 @@
 # Giga Chat Client
 
-SolidJS + Tauri 2 client for the FastAPI backend that proxies GigaChat.
+SolidJS + Tauri 2 client for the FastAPI backend.
 
 ## Development
 
