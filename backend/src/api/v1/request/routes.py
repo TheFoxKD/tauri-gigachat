@@ -56,7 +56,7 @@ async def request(
         return EventSourceResponse(
             content=event_stream(),
             headers={
-                "X-Conversation-Id": stream_result.conversation_id,
+                "Conversation-Id": stream_result.conversation_id,
             },
         )
 

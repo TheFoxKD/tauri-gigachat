@@ -8,7 +8,7 @@ class AppCorsMiddleware(CORSMiddleware):
         "allow_credentials": True,
         "allow_methods": ["*"],
         "allow_headers": ["*"],
-        "expose_headers": ["X-Conversation-Id"],
+        "expose_headers": ["Conversation-Id"],
     }
 
     def __init__(

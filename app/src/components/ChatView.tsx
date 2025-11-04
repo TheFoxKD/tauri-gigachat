@@ -2,7 +2,7 @@ import { Component, Show, createMemo, For } from "solid-js";
 import { chatStore } from "../stores/chat";
 import { pluralizeMessages, renderMarkdown } from "../lib/format";
 import { ChatComposer } from "./ChatComposer";
-import gigaMark from "../assets/giga-mark.svg";
+import gigaCenter from "../assets/gigachat-center.svg";
 
 interface ChatViewProps {
   isSubmitting?: boolean;
@@ -23,7 +23,7 @@ export const ChatView: Component<ChatViewProps> = (props) => {
         when={activeConversation()}
         fallback={
           <div class="chat-view__empty">
-            <img class="chat-view__placeholder-icon" src={gigaMark} alt="" aria-hidden="true" />
+            <img class="chat-view__placeholder-icon" src={gigaCenter} alt="" aria-hidden="true" />
             <h2>Начните диалог</h2>
             <ChatComposer
               variant="center"

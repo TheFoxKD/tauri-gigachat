@@ -1,4 +1,4 @@
-import { Component, createSignal, Show } from "solid-js";
+import { Component, createSignal, Show, createMemo } from "solid-js";
 import { ConversationsList } from "./ConversationsList";
 import { ChatView } from "./ChatView";
 import { SettingsModal } from "./SettingsModal";
@@ -9,6 +9,7 @@ import {
   IconPlus,
   IconSettings,
 } from "./icons";
+import { chatStore } from "../stores/chat";
 
 interface AppShellProps {
   username: string;
@@ -29,6 +30,7 @@ interface AppShellProps {
 
 export const AppShell: Component<AppShellProps> = (props) => {
   const [isSettingsOpen, setIsSettingsOpen] = createSignal(false);
+  const hasConversations = createMemo(() => chatStore.conversations().size > 0);
 
   return (
     <div class="shell">
@@ -36,14 +38,16 @@ export const AppShell: Component<AppShellProps> = (props) => {
         class={`shell__sidebar${props.isSidebarCollapsed ? " shell__sidebar--collapsed" : ""}`}
       >
         <header class="shell__sidebar-header">
-          <button
-            class="shell__icon-button"
-            type="button"
-            aria-label={props.isSidebarCollapsed ? "Показать панель" : "Скрыть панель"}
-            onClick={() => props.onToggleSidebar?.()}
-          >
-            {props.isSidebarCollapsed ? <IconChevronRight size={18} /> : <IconChevronLeft size={18} />}
-          </button>
+          <Show when={hasConversations()}>
+            <button
+              class="shell__icon-button"
+              type="button"
+              aria-label={props.isSidebarCollapsed ? "Показать панель" : "Скрыть панель"}
+              onClick={() => props.onToggleSidebar?.()}
+            >
+              {props.isSidebarCollapsed ? <IconChevronRight size={18} /> : <IconChevronLeft size={18} />}
+            </button>
+          </Show>
           <span class="shell__username" title={props.username}>
             {props.username}
           </span>

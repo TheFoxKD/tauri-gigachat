@@ -38,6 +38,12 @@ export const IconMenu = (props: IconProps) => (
   </svg>
 );
 
+export const IconStream = (props: IconProps) => (
+  <svg {...baseProps(props)}>
+    <path d="M13 2 6 12h5l-2 10 9-12h-6l1-8z" />
+  </svg>
+);
+
 export const IconSettings = (props: IconProps) => (
   <svg {...baseProps(props)}>
     <path d="m12 15 3-3-3-3" />

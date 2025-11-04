@@ -1,5 +1,5 @@
 import { Component, createSignal } from "solid-js";
-import { IconSend } from "./icons";
+import { IconSend, IconStream } from "./icons";
 
 interface ChatComposerProps {
   placeholder?: string;
@@ -71,14 +71,23 @@ export const ChatComposer: Component<ChatComposerProps> = (props) => {
         disabled={props.isSubmitting}
       />
       <div class="composer__actions">
-        <label class="composer__stream-toggle">
+        <label
+          class="composer__stream-toggle"
+          title={streamEnabled() ? "Стриминг: вкл" : "Стриминг: выкл"}
+          role="switch"
+          aria-checked={streamEnabled() ? "true" : "false"}
+        >
           <input
+            class="visually-hidden"
             type="checkbox"
             checked={streamEnabled()}
             onInput={handleStreamToggle}
             disabled={props.isSubmitting}
+            aria-label="Переключить стриминг"
           />
-          <span>Стримить</span>
+          <span class="composer__stream-icon" aria-hidden="true">
+            <IconStream size={18} />
+          </span>
         </label>
         <button
           class="composer__submit"

@@ -106,7 +106,7 @@ export async function startStreamRequest(params: RequestOptions): Promise<Stream
   }
 
   const conversationId =
-    response.headers.get("X-Conversation-Id") ?? params.conversationId ?? "";
+    response.headers.get("Conversation-Id") ?? params.conversationId ?? "";
 
   async function* generator(): AsyncGenerator<string> {
     try {
